@@ -1,3 +1,17 @@
+/*
+Steps followed 
+
+1)  we first generate a 2048-bit RSA key pair using the rsa.GenerateKey function from the "crypto/rsa" package. 
+2)  We then create a self-signed digital certificate using the x509.CreateCertificate function from the "crypto/x509" package. 
+3) The certificate includes a randomly generated serial number, a subject name (including the common name, organization, and country), 
+   a validity period of one year, and key usage and extended key usage attributes.
+ 4) In last we write the private key and certificate to files in PEM format using the pem.Encode function. 
+    The private key is encoded using the PKCS#1 format, while the certificate is encoded using the X.509 format.
+
+
+*/
+
+
 package main
 
 import (
@@ -13,6 +27,7 @@ import (
 
 func main() {
 	// Generate a 2048-bit RSA key pair
+
 	privKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		panic(err)
@@ -34,6 +49,7 @@ func main() {
 		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
 		BasicConstraintsValid: true,
 	}
+	
 	derBytes, err := x509.CreateCertificate(rand.Reader, &template, &template, &privKey.PublicKey, privKey)
 	if err != nil {
 		panic(err)
